@@ -24,7 +24,7 @@ module RedisSessionStore
     # Returns the current Redis connection. If none has been created, will
     # create a new one.
     def self.redis
-      return @@redis if @@redis
+      return @@redis if defined?(@@redis)
       self.redis = @@default_options
       self.redis
     end
