@@ -48,7 +48,7 @@ class RedisSessionStore < ActionController::Session::AbstractStore
       begin
         key = prefixed(sid)
         puts "RedisSessionStore:: getting key: #{key}"
-        data = Base.redis.get key
+        data = self.class.redis.get key
         session = data.nil? ? {} : Marshal.load(data)
       rescue Errno::ECONNREFUSED
         session = {}
@@ -64,8 +64,8 @@ class RedisSessionStore < ActionController::Session::AbstractStore
       puts "RedisSessionStore:: settng key: #{key}"
     
       # redis.multi only works in redis2.
-      Base.redis.set(key, Marshal.dump(session_data))
-      Base.redis.expire(key, expiry) if expiry
+      self.class.redis.set(key, Marshal.dump(session_data))
+      self.class.redis.expire(key, expiry) if expiry
       
       return true
     rescue Errno::ECONNREFUSED
