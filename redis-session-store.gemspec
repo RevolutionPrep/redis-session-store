@@ -22,7 +22,6 @@ Gem::Specification.new do |s|
      "README.md",
      "Rakefile",
      "VERSION",
-     "lib/base.rb",
      "lib/redis-session-store.rb",
      "redis-session-store.gemspec"
   ]
