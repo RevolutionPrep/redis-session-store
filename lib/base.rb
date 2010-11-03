@@ -38,7 +38,6 @@ module RedisSessionStore
         :db => 0,
         :key_prefix => ""
       }.update(options)
-      puts Base.redis.inspect
     end
 
     private
@@ -49,7 +48,9 @@ module RedisSessionStore
       def get_session(env, sid)
         sid ||= generate_sid
         begin
-          data = Base.redis.get prefixed(sid)
+          key = prefixed(sid)
+          puts "RedisSessionStore:: getting key: #{key}"
+          data = Base.redis.get key
           session = data.nil? ? {} : Marshal.load(data)
         rescue Errno::ECONNREFUSED
           session = {}
@@ -60,10 +61,13 @@ module RedisSessionStore
       def set_session(env, sid, session_data)
         options = env['rack.session.options']
         expiry  = options[:expire_after] || nil
+        
+        key = prefixed(sid)
+        puts "RedisSessionStore:: settng key: #{key}"
       
         # redis.multi only works in redis2.
-        Base.redis.set(prefixed(sid), Marshal.dump(session_data))
-        Base.redis.expire(prefixed(sid), expiry) if expiry
+        Base.redis.set(key, Marshal.dump(session_data))
+        Base.redis.expire(key, expiry) if expiry
         
         return true
       rescue Errno::ECONNREFUSED
