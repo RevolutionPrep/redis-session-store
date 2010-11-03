@@ -43,7 +43,7 @@ module RedisSessionStore
 
     private
       def prefixed(sid)
-        "#{@default_options[:key_prefix]}#{sid}"
+        "#{@@default_options[:key_prefix]}#{sid}"
       end
     
       def get_session(env, sid)
