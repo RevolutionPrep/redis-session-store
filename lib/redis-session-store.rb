@@ -28,13 +28,14 @@ class RedisSessionStore < ActionController::Session::AbstractStore
 
   def initialize(app, options = {})
     super
-    @@default_options = {
+    @@default_options = @default_options.merge({
       :namespace => 'rack:session',
       :host => 'localhost',
       :port => '6379',
       :db => 0,
       :key_prefix => ""
-    }.update(options)
+    }).update(options)
+    @default_options = @@default_options
   end
 
   private
@@ -61,7 +62,7 @@ class RedisSessionStore < ActionController::Session::AbstractStore
       expiry  = options[:expire_after] || nil
       
       key = prefixed(sid)
-      puts "RedisSessionStore:: settng key: #{key}"
+      puts "RedisSessionStore:: setting key: #{key}"
     
       # redis.multi only works in redis2.
       self.class.redis.set(key, Marshal.dump(session_data))
