@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["ryanmoran"]
-  s.date = %q{2010-11-03}
+  s.date = %q{2010-11-04}
   s.description = %q{Port of the Memcache session store, forked from mattmatt's original gem}
   s.email = %q{ryan.moran@gmail.com}
   s.extra_rdoc_files = [
