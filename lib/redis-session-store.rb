@@ -47,9 +47,7 @@ class RedisSessionStore < ActionController::Session::AbstractStore
     def get_session(env, sid)
       sid ||= generate_sid
       begin
-        key = prefixed(sid)
-        Rails.logger.info "RedisSessionStore:: getting key: #{key}"
-        data = self.class.redis.get key
+        data = self.class.redis.get prefixed(sid)
         session = data.nil? ? {} : Marshal.load(data)
       rescue Errno::ECONNREFUSED
         session = {}
@@ -61,12 +59,9 @@ class RedisSessionStore < ActionController::Session::AbstractStore
       options = env['rack.session.options']
       expiry  = options[:expire_after] || nil
       
-      key = prefixed(sid)
-      Rails.logger.info "RedisSessionStore:: setting key: #{key}"
-    
       # redis.multi only works in redis2.
-      self.class.redis.set(key, Marshal.dump(session_data))
-      self.class.redis.expire(key, expiry) if expiry
+      self.class.redis.set(prefixed(sid), Marshal.dump(session_data))
+      self.class.redis.expire(prefixed(sid), expiry) if expiry
       
       return true
     rescue Errno::ECONNREFUSED
